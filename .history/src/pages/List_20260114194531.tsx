@@ -24,7 +24,8 @@ const List = () => {
             <tr key={item.id}>
               <td className="border p-2">{item.id}</td>
               <td className="border p-2">{item.name}</td>
-              <td className="border p-2">  
+              <td className="border p-2">
+                {/* 👉 ĐÂY CHÍNH LÀ ĐOẠN BẠN HỎI */}
                 <Link
                   to={`/edit/${item.id}`}
                   className="text-blue-600 hover:underline"

@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-
     "dev": "vite",
     "server": "npx json-server-auth db.json",
     "build": "tsc -b && vite build",

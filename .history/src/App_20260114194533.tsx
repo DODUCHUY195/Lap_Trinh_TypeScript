@@ -26,10 +26,16 @@ function App() {
         </div>
       </nav>
 
+      {/* MAIN CONTENT */}
       <div className="max-w-6xl mx-auto mt-10 px-4">
         <Routes>
+          {/* LIST */}
           <Route path="/" element={<List />} />
+
+          {/* ADD */}
           <Route path="/add" element={<Add />} />
+
+          {/* EDIT */}
           <Route path="/edit/:id" element={<Edit />} />
         </Routes>
       </div>

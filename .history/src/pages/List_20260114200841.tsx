@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { subjects } from "../component/SubjectList";
+
 
 
 const List = () => {

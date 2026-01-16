@@ -4,8 +4,7 @@ import { Link, Routes, Route } from "react-router-dom";
 import List from "./pages/List";
 import Add from "./pages/Add";
 import Edit from "./pages/Edit";
-
-
+import AddPage from "./pages/Add";
 
 function App() {
   return (

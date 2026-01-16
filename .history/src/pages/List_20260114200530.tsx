@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { subjects } from "../component/SubjectList";
-
 
 const List = () => {
- 
+  const data = [
+    { id: 1, name: "Sản phẩm A" },
+    { id: 2, name: "Sản phẩm B" },
+  ];
 
   return (
     <div>
@@ -19,7 +20,7 @@ const List = () => {
         </thead>
 
         <tbody>
-          {subjects.map((item) => (
+          {data.map((item) => (
             <tr key={item.id}>
               <td className="border p-2">{item.id}</td>
               <td className="border p-2">{item.name}</td>

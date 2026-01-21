@@ -1,21 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { subjectSchema, type SubjectForm } from "../z/subject";
 import toast from "react-hot-toast";
 
-type FormData = {
-  name: string;
-  credit: number;
-  category: "Cơ sở" | "Chuyên ngành" | "Đại cương";
-  teacher: string;
-};
+type FormData = SubjectForm;
 
 function AddPage() {
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
+    resolver: zodResolver(subjectSchema),
     mode: "onBlur",
     defaultValues: {
       name: "ReactJS Cơ Bản",
@@ -27,17 +25,25 @@ function AddPage() {
 
   const onSubmit = async (values: FormData) => {
     try {
-      const res = await fetch("/api/subjects", {
+      const res = await fetch("http://localhost:4000/api/subjects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      if (!res.ok) return;
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const msg =
+          Array.isArray(data?.errors) && data.errors.length
+            ? data.errors.join("; ")
+            : "Thêm thất bại";
+        toast.error(msg);
+        return;
+      }
       await res.json();
       toast.success("Thêm thành công");
       navigate("/");
-    } catch {
-      toast.error("Thêm thất bại");
+    } catch (e) {
+      toast.error("Có lỗi xảy ra khi thêm");
     }
   };
 
@@ -55,6 +61,9 @@ function AddPage() {
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("name")}
           />
+          {errors.name && (
+            <p className="text-red-600 mt-1">{errors.name.message}</p>
+          )}
         </div>
 
         <div>
@@ -65,8 +74,11 @@ function AddPage() {
             id="credit"
             type="number"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...register("credit", { valueAsNumber: true })}
+            {...register("credit")}
           />
+          {errors.credit && (
+            <p className="text-red-600 mt-1">{errors.credit.message}</p>
+          )}
         </div>
 
         <div>
@@ -82,6 +94,9 @@ function AddPage() {
             <option value="Chuyên ngành">Chuyên ngành</option>
             <option value="Đại cương">Đại cương</option>
           </select>
+          {errors.category && (
+            <p className="text-red-600 mt-1">{errors.category.message}</p>
+          )}
         </div>
 
         <div>
@@ -94,6 +109,9 @@ function AddPage() {
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("teacher")}
           />
+          {errors.teacher && (
+            <p className="text-red-600 mt-1">{errors.teacher.message}</p>
+          )}
         </div>
 
         <button

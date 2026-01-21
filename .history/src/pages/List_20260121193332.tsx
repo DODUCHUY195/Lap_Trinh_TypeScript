@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import toast from "react-hot-toast";
 import type { Subject } from "../types/Subject";
 
 const List = () => {
@@ -84,23 +83,9 @@ const List = () => {
                   <Link to={`/edit/${item.id}`} className="text-blue-600 hover:underline">
                     Sửa
                   </Link>
-                  <button
-                    className="ml-3 text-red-600 hover:underline"
-                    onClick={async () => {
-                      const ok = window.confirm(`Bạn có chắc muốn xóa ID ${item.id}?`);
-                      if (!ok) return;
-                      try {
-                        const res = await fetch(`/api/subjects/${item.id}`, { method: "DELETE" });
-                        if (res.status !== 204 && !res.ok) throw new Error(`HTTP ${res.status}`);
-                        setSubjects((prev) => prev.filter((s) => s.id !== item.id));
-                        toast.success("Xóa thành công");
-                      } catch {
-                        toast.error("Xóa thất bại");
-                      }
-                    }}
-                  >
-                    Xóa
-                  </button>
+                </td>
+                <td className="border p-2">
+                  <button onClick={() => {}}>Xoá</button>
                 </td>
               </tr>
             ))

@@ -87,16 +87,11 @@ const List = () => {
                   <button
                     className="ml-3 text-red-600 hover:underline"
                     onClick={async () => {
-                      const ok = window.confirm(`Bạn có chắc muốn xóa ID ${item.id}?`);
-                      if (!ok) return;
-                      try {
+                     
                         const res = await fetch(`/api/subjects/${item.id}`, { method: "DELETE" });
-                        if (res.status !== 204 && !res.ok) throw new Error(`HTTP ${res.status}`);
                         setSubjects((prev) => prev.filter((s) => s.id !== item.id));
                         toast.success("Xóa thành công");
-                      } catch {
-                        toast.error("Xóa thất bại");
-                      }
+                      
                     }}
                   >
                     Xóa

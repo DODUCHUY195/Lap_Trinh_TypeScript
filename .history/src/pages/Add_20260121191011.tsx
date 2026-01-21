@@ -36,8 +36,8 @@ function AddPage() {
       await res.json();
       toast.success("Thêm thành công");
       navigate("/");
-    } catch {
-      toast.error("Thêm thất bại");
+    } catch (e) {
+      // Bỏ hiển thị lỗi theo yêu cầu
     }
   };
 

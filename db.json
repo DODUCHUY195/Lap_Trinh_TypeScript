@@ -30,7 +30,7 @@
     },
     {
       "id": 5,
-      "name": "Database",
+      "name": "Databasee",
       "credit": 5,
       "category": "Chuyên ngành",
       "teacher": "Đỗ Đức Huy"
@@ -41,34 +41,6 @@
       "credit": 6,
       "category": "Đại cương",
       "teacher": "Phạm Văn Dong"
-    },
-    {
-      "id": 7,
-      "name": "gghh",
-      "credit": 2,
-      "category": "Cơ sở",
-      "teacher": "abcc"
-    },
-    {
-      "id": 8,
-      "name": "Đỗ Đức Huy",
-      "credit": 2444,
-      "category": "Đại cương",
-      "teacher": "avcc"
-    },
-    {
-      "id": 9,
-      "name": "acccc",
-      "credit": 1,
-      "category": "Đại cương",
-      "teacher": "1add"
-    },
-    {
-      "id": 10,
-      "name": "abcc",
-      "credit": 566,
-      "category": "Chuyên ngành",
-      "teacher": "avccc"
     }
   ]
 }

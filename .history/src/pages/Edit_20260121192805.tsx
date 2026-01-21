@@ -1,49 +1,62 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { subjectSchema, type SubjectForm } from "../z/subject";
 import toast from "react-hot-toast";
 
-type FormData = {
-  name: string;
-  credit: number;
-  category: "Cơ sở" | "Chuyên ngành" | "Đại cương";
-  teacher: string;
-};
-
-function AddPage() {
+function Edit() {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<FormData>({
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<SubjectForm>({
+    resolver: zodResolver(subjectSchema),
     mode: "onBlur",
     defaultValues: {
-      name: "ReactJS Cơ Bản",
-      credit: 3,
+      name: "",
+      credit: 1,
       category: "Chuyên ngành",
-      teacher: "Nguyễn Văn A",
+      teacher: "",
     },
   });
 
-  const onSubmit = async (values: FormData) => {
+  useEffect(() => {
+    const fetchOne = async () => {
+        const res = await fetch(`/api/subjects/${id}`);
+        const data: SubjectForm = await res.json();
+        reset(data);
+    };
+    if (id) fetchOne();
+  }, [id, reset]);
+
+  const onSubmit = async (values: SubjectForm) => {
     try {
-      const res = await fetch("/api/subjects", {
-        method: "POST",
+      const res = await fetch(`/api/subjects/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      if (!res.ok) return;
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const msg = Array.isArray(data?.errors) && data.errors.length ? data.errors.join("; ") : "Sửa thất bại";
+        toast.error(msg);
+        return;
+      }
       await res.json();
-      toast.success("Thêm thành công");
+      toast.success("Sửa thành công");
       navigate("/");
     } catch {
-      toast.error("Thêm thất bại");
+      toast.error("Có lỗi xảy ra khi sửa");
     }
   };
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-6">Thêm mới</h1>
+      <h1 className="text-2xl font-bold mb-6">Sửa môn học</h1>
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="name" className="block font-medium mb-1">
@@ -55,8 +68,8 @@ function AddPage() {
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("name")}
           />
+          {errors.name && <p className="text-red-600 mt-1">{errors.name.message}</p>}
         </div>
-
         <div>
           <label htmlFor="credit" className="block font-medium mb-1">
             Số tín chỉ
@@ -65,10 +78,10 @@ function AddPage() {
             id="credit"
             type="number"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...register("credit", { valueAsNumber: true })}
+            {...register("credit")}
           />
+          {errors.credit && <p className="text-red-600 mt-1">{errors.credit.message}</p>}
         </div>
-
         <div>
           <label htmlFor="category" className="block font-medium mb-1">
             Loại môn học
@@ -82,8 +95,8 @@ function AddPage() {
             <option value="Chuyên ngành">Chuyên ngành</option>
             <option value="Đại cương">Đại cương</option>
           </select>
+          {errors.category && <p className="text-red-600 mt-1">{errors.category.message}</p>}
         </div>
-
         <div>
           <label htmlFor="teacher" className="block font-medium mb-1">
             Giáo viên
@@ -94,18 +107,18 @@ function AddPage() {
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("teacher")}
           />
+          {errors.teacher && <p className="text-red-600 mt-1">{errors.teacher.message}</p>}
         </div>
-
         <button
           type="submit"
           disabled={isSubmitting}
           className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
         >
-          {isSubmitting ? "Đang thêm..." : "Thêm"}
+          {isSubmitting ? "Đang lưu..." : "Lưu"}
         </button>
       </form>
     </div>
   );
-}
+};
 
-export default AddPage;
+export default Edit;

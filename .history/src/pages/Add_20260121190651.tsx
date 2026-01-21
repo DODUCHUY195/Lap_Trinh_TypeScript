@@ -27,7 +27,7 @@ function AddPage() {
 
   const onSubmit = async (values: FormData) => {
     try {
-      const res = await fetch("/api/subjects", {
+      const res = await fetch("http://localhost:4000/api/subjects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -36,8 +36,8 @@ function AddPage() {
       await res.json();
       toast.success("Thêm thành công");
       navigate("/");
-    } catch {
-      toast.error("Thêm thất bại");
+    } catch (e) {
+      // Bỏ hiển thị lỗi theo yêu cầu
     }
   };
 

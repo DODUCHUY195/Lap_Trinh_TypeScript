@@ -145,23 +145,6 @@ app.put("/api/subjects/:id", (req, res) => {
   }
 });
 
-app.delete("/api/subjects/:id", (req, res) => {
-  try {
-    const id = parseInt(String(req.params.id), 10);
-    const raw = fs.readFileSync(dbPath, "utf-8");
-    const dbJson = JSON.parse(raw);
-    const list = Array.isArray(dbJson.subject) ? dbJson.subject : [];
-    const index = list.findIndex((s) => s.id === id);
-    if (index === -1) return res.status(404).json({ error: "Không tìm thấy" });
-    list.splice(index, 1);
-    dbJson.subject = list;
-    fs.writeFileSync(dbPath, JSON.stringify(dbJson, null, 2), "utf-8");
-    res.status(204).end();
-  } catch (e) {
-    res.status(500).json({ error: "Lỗi máy chủ" });
-  }
-});
-
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Node server running at http://localhost:${PORT}`);

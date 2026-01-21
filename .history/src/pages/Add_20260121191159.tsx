@@ -36,7 +36,7 @@ function AddPage() {
       await res.json();
       toast.success("Thêm thành công");
       navigate("/");
-    } catch {
+    } catch () {
       toast.error("Thêm thất bại");
     }
   };

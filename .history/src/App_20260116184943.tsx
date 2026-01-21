@@ -4,16 +4,14 @@ import { Link, Routes, Route } from "react-router-dom";
 import List from "./pages/List";
 import Add from "./pages/Add";
 import Edit from "./pages/Edit";
-
+import Button from "./components/Button";
 
 
 function App() {
-
-
   return (
     <>
       {/* NAVBAR */}
-     
+      <Button label="Hãy nhấo vào đây" onlick={() => alert('Button clicked!')} color="blue" />
       <nav className="bg-blue-600 text-white shadow">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="text-xl font-semibold">

@@ -4,16 +4,25 @@ import { Link, Routes, Route } from "react-router-dom";
 import List from "./pages/List";
 import Add from "./pages/Add";
 import Edit from "./pages/Edit";
-
+import Button from "./components/Button";
+import { useEffect, useState } from "react";
 
 
 function App() {
-
+  const [count, setCount] = useState(0); //State
+  useEffect(() => {
+    document.title = `Bạn đã nhấn ${count} lần`;
+  }, [count]);
 
   return (
     <>
       {/* NAVBAR */}
-     
+      <p>giá trị: {count}
+        </p>
+        <Button label="Hãy nhấn vào đây" onlick={() => setCount(count + 1)} color="black" /> {/* Props */}
+        
+      <Button label="Hãy nhấn vào đây" onlick={() => alert('Button clicked!')} color="black" />
+        <Button label="Hãy nhấn vào đây" onlick={() => alert('Button clicked2!')} color="red" />
       <nav className="bg-blue-600 text-white shadow">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="text-xl font-semibold">

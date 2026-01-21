@@ -69,15 +69,9 @@ function AddPage() {
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            onBlur={() =>
-              setErrors((prev) => ({
-                ...prev,
-                name: form.name.trim().length <= 3 ? "Tên phải > 3 ký tự" : "",
-              }))
-            }
           />
           {errors.name && (
-            <p className="text-red-600 mt-1">{errors.name}</p>
+            <p className="text-red-600 mt-1">{errors.name.message}</p>
           )}
         </div>
 

@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import type { Subject } from "../types/Subject";
 
-type Subject = {
-  id: number;
-  name: string;
-  credit: number;
-  category: string;
-  teacher: string;
-};
-
-function ListSimple() {
+const List = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [teacherFilter, setTeacherFilter] = useState<string>("Tất cả");
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -20,15 +15,20 @@ function ListSimple() {
   const [totalPages, setTotalPages] = useState<number>(1);
 
   useEffect(() => {
-    const getTeachers = async () => {
+    const fetchTeachers = async () => {
       try {
-        const { data } = await axios.get<string[]>("/api/teachers");
-        setTeachers(data);
-      } catch (error) {
-        console.log(error);
+        setLoading(true);
+        setError(null);
+        const res = await fetch("/api/teachers");
+        const list: string[] = await res.json();
+        setTeachers(list);
+      } catch (e) {
+        setError((e as Error).message || "Không thể tải danh sách giáo viên");
+      } finally {
+        setLoading(false);
       }
     };
-    getTeachers();
+    fetchTeachers();
   }, []);
 
   useEffect(() => {
@@ -38,17 +38,22 @@ function ListSimple() {
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const params = new URLSearchParams();
         if (searchTerm.trim()) params.set("q", searchTerm.trim());
         if (teacherFilter && teacherFilter !== "Tất cả") params.set("teacher", teacherFilter);
         params.set("page", String(currentPage));
         params.set("limit", String(itemsPerPage));
-        const res = await axios.get<Subject[]>(`/api/subjects?${params.toString()}`);
-        const total = Number(res.headers["x-total-count"] || "0");
-        setSubjects(res.data);
+        const res = await fetch(`/api/subjects?${params.toString()}`);
+        const data: Subject[] = await res.json();
+        const total = Number(res.headers.get("X-Total-Count") || "0");
+        setSubjects(data);
         setTotalPages(Math.max(1, Math.ceil(total / itemsPerPage)));
-      } catch (error) {
-        console.log(error);
+      } catch {
+        setError("Không thể tải danh sách môn học");
+      } finally {
+        setLoading(false);
       }
     };
     fetchSubjects();
@@ -57,9 +62,8 @@ function ListSimple() {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-6">Danh sách</h1>
-
+    <div>
+      <h1 className="text-2xl font-bold mb-4">Danh sách</h1>
       <div className="flex items-center gap-4 mb-4">
         <input
           value={searchTerm}
@@ -79,46 +83,57 @@ function ListSimple() {
           ))}
         </select>
       </div>
-
-      <div className="overflow-x-auto">
-        <table className="w-full border border-gray-300 rounded-lg">
-          <thead className="bg-gray-100">
+      {loading && <p className="mb-2 text-gray-600">Đang tải dữ liệu...</p>}
+      {error && <p className="mb-4 text-red-600">Lỗi: {error}</p>}
+      <table className="w-full border">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border p-2">ID</th>
+            <th className="border p-2">Tên</th>
+            <th className="border p-2">Giáo viên</th>
+            <th className="border p-2">Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          {subjects.length === 0 ? (
             <tr>
-              <th className="px-4 py-2 border border-gray-300 text-left">ID</th>
-              <th className="px-4 py-2 border border-gray-300 text-left">Name</th>
-              <th className="px-4 py-2 border border-gray-300 text-left">Teacher</th>
-              <th className="px-4 py-2 border border-gray-300 text-left">Actions</th>
+              <td className="border p-2 text-center" colSpan={4}>
+                Không có dữ liệu
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {subjects.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border border-gray-300">{item.id}</td>
-                <td className="px-4 py-2 border border-gray-300">{item.name}</td>
-                <td className="px-4 py-2 border border-gray-300">{item.teacher}</td>
-                <td className="px-4 py-2 border border-gray-300">
-                  <Link to={`/edit/${item.id}`}>Edit</Link>
+          ) : (
+            subjects.map((item) => (
+              <tr key={item.id}>
+                <td className="border p-2">{item.id}</td>
+                <td className="border p-2">{item.name}</td>
+                <td className="border p-2">{item.teacher}</td>
+                <td className="border p-2">
+                  <Link to={`/edit/${item.id}`} className="text-blue-600 hover:underline">
+                    Sửa
+                  </Link>
                   <button
-                    className="ml-3 text-red-600"
+                    className="ml-3 text-red-600 hover:underline"
                     onClick={async () => {
-                      const ok = window.confirm(`Xóa ID ${item.id}?`);
+                      const ok = window.confirm(`Bạn có chắc muốn xóa ID ${item.id}?`);
                       if (!ok) return;
                       try {
-                        await axios.delete(`/api/subjects/${item.id}`);
+                        const res = await fetch(`/api/subjects/${item.id}`, { method: "DELETE" });
+                        if (res.status !== 204 && !res.ok) throw new Error(`HTTP ${res.status}`);
                         setSubjects((prev) => prev.filter((s) => s.id !== item.id));
-                      } catch (error) {
-                        console.log(error);
+                        toast.success("Xóa thành công");
+                      } catch {
+                        toast.error("Xóa thất bại");
                       }
                     }}
                   >
-                    Delete
+                    Xóa
                   </button>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            ))
+          )}
+        </tbody>
+      </table>
       <div className="flex items-center gap-2 mt-4">
         <button
           className="px-3 py-1 border rounded disabled:opacity-50"
@@ -146,6 +161,6 @@ function ListSimple() {
       </div>
     </div>
   );
-}
+};
 
-export default ListSimple;
+export default List;

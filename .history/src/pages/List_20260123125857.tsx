@@ -97,7 +97,7 @@ function ListSimple() {
                 <td className="px-4 py-2 border border-gray-300">{item.name}</td>
                 <td className="px-4 py-2 border border-gray-300">{item.teacher}</td>
                 <td className="px-4 py-2 border border-gray-300">
-                  <Link to={`/edit/${item.id}`}>Edit</Link>
+                  <Link to={`/edit-simple/${item.id}`}>Edit</Link>
                   <button
                     className="ml-3 text-red-600"
                     onClick={async () => {

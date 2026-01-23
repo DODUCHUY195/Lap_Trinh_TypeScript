@@ -30,17 +30,24 @@
     },
     {
       "id": 5,
-      "name": "Databasee",
+      "name": "aasss",
       "credit": 5,
       "category": "Chuyên ngành",
-      "teacher": "Đỗ Đức Huy"
+      "teacher": "sssss"
     },
     {
       "id": 6,
-      "name": "Lập trình TS",
+      "name": "Lập trình TSS",
       "credit": 6,
       "category": "Đại cương",
-      "teacher": "Phạm Văn Dong"
+      "teacher": "Phạm Văn Donggg"
+    },
+    {
+      "id": 7,
+      "name": "a222",
+      "credit": 2,
+      "category": "Chuyên ngành",
+      "teacher": "a222"
     }
   ]
 }

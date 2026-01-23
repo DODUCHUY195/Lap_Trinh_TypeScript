@@ -19,7 +19,6 @@ function EditSimple() {
     category: "Chuyên ngành",
     teacher: "",
   });
-  const [errors, setErrors] = useState<Partial<Record<keyof Omit<Subject, "id">, string>>>({});
 
   useEffect(() => {
     const getOne = async () => {
@@ -40,14 +39,6 @@ function EditSimple() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const nextErrors: Partial<Record<keyof Omit<Subject, "id">, string>> = {};
-    if (!form.name || form.name.trim().length <= 3) nextErrors.name = "Tên phải > 3 ký tự";
-    if (!Number.isFinite(form.credit) || form.credit <= 0) nextErrors.credit = "Số tín chỉ phải > 0";
-    if (!form.category || !["Cơ sở", "Chuyên ngành", "Đại cương"].includes(form.category))
-      nextErrors.category = "Loại môn học không hợp lệ";
-    if (!form.teacher || form.teacher.trim().length <= 3) nextErrors.teacher = "Giáo viên phải > 3 ký tự";
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length) return;
     try {
       await axios.put(`/api/subjects/${id}`, form);
       navigate("/");
@@ -67,7 +58,6 @@ function EditSimple() {
             value={form.name}
             onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
           />
-          {errors.name && <p className="text-red-600 mt-1">{errors.name}</p>}
         </div>
         <div>
           <label className="block font-medium mb-1">Số tín chỉ</label>
@@ -77,7 +67,6 @@ function EditSimple() {
             value={form.credit}
             onChange={(e) => setForm((p) => ({ ...p, credit: Number(e.target.value) }))}
           />
-          {errors.credit && <p className="text-red-600 mt-1">{errors.credit}</p>}
         </div>
         <div>
           <label className="block font-medium mb-1">Loại môn học</label>
@@ -90,7 +79,6 @@ function EditSimple() {
             <option value="Chuyên ngành">Chuyên ngành</option>
             <option value="Đại cương">Đại cương</option>
           </select>
-          {errors.category && <p className="text-red-600 mt-1">{errors.category}</p>}
         </div>
         <div>
           <label className="block font-medium mb-1">Giáo viên</label>
@@ -99,7 +87,6 @@ function EditSimple() {
             value={form.teacher}
             onChange={(e) => setForm((p) => ({ ...p, teacher: e.target.value }))}
           />
-          {errors.teacher && <p className="text-red-600 mt-1">{errors.teacher}</p>}
         </div>
         <button className="px-5 py-2 bg-blue-600 text-white rounded-lg">Lưu</button>
       </form>

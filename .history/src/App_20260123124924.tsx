@@ -1,9 +1,10 @@
 import { Toaster } from "react-hot-toast";
 import { Link, Routes, Route } from "react-router-dom";
 
-import List from "./pages/List";
+import List from "./pages/ListSimple";
 import Add from "./pages/Add";
 import Edit from "./pages/Edit";
+
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
       <nav className="bg-blue-600 text-white shadow">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="text-xl font-semibold">
-            <strong>App</strong>
+            <strong>WEB502 App</strong>
           </Link>
 
           <div className="flex items-center space-x-6">
@@ -35,7 +36,6 @@ function App() {
           <Route path="/" element={<List />} />
           <Route path="/add" element={<Add />} />
           <Route path="/edit/:id" element={<Edit />} />
-         
         </Routes>
       </div>
 

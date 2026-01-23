@@ -16,7 +16,7 @@ function App() {
       <nav className="bg-blue-600 text-white shadow">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="text-xl font-semibold">
-            <strong>App</strong>
+            <strong>WEB502 App</strong>
           </Link>
 
           <div className="flex items-center space-x-6">

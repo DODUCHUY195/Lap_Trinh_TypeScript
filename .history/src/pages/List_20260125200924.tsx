@@ -1,7 +1,6 @@
 // Import hook React để quản lý state và life-cycle
 import { useEffect, useState } from "react";
-// Import axios để gọi HTTP API
-import axios from "axios";
+import { listSubjects, getTeachers } from "../base";
 // Import Link để điều hướng tới trang sửa
 import { Link } from "react-router-dom";
 
@@ -40,9 +39,7 @@ function ListSimple() {
   useEffect(() => {
     const getTeachers = async () => {
       try {
-        // Gọi API lấy danh sách giáo viên duy nhất
-        const { data } = await axios.get<string[]>("/api/teachers");
-        // Cập nhật state combobox
+        const data = await getTeachers();
         setTeachers(data);
       } catch (error) {
         // Log lỗi đơn giản
@@ -61,19 +58,13 @@ function ListSimple() {
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        // Tạo query string: q, teacher, page, limit
-        const params = new URLSearchParams();
-        if (searchTerm.trim()) params.set("q", searchTerm.trim());
-        if (teacherFilter && teacherFilter !== "Tất cả") params.set("teacher", teacherFilter);
-        params.set("page", String(currentPage));
-        params.set("limit", String(itemsPerPage));
-        // Gọi API lấy danh sách theo tham số
-        const res = await axios.get<Subject[]>(`/api/subjects?${params.toString()}`);
-        // Đọc tổng số bản ghi từ header để tính tổng số trang
-        const total = Number(res.headers["x-total-count"] || "0");
-        // Cập nhật danh sách hiển thị
-        setSubjects(res.data);
-        // Tính tổng số trang
+        const { items, total } = await listSubjects({
+          q: searchTerm.trim() || undefined,
+          teacher: teacherFilter !== "Tất cả" ? teacherFilter : undefined,
+          page: currentPage,
+          limit: itemsPerPage,
+        });
+        setSubjects(items);
         setTotalPages(Math.max(1, Math.ceil(total / itemsPerPage)));
       } catch (error) {
         // Log lỗi đơn giản

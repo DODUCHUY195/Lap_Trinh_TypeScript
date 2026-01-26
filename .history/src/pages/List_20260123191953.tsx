@@ -20,7 +20,6 @@ type Subject = {
 };
 
 function ListSimple() {
-  
   // Danh sách môn học hiển thị trong bảng
   const [subjects, setSubjects] = useState<Subject[]>([]);
   // Từ khóa tìm kiếm theo tên

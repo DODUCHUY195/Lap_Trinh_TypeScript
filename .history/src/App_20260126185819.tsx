@@ -4,7 +4,6 @@ import { Link, Routes, Route } from "react-router-dom";
 import List from "./pages/List";
 import Add from "./pages/Add";
 import Edit from "./pages/Edit";
-import AuthPage from "./pages/AuthPage";
 
 
 function App() {
@@ -27,12 +26,6 @@ function App() {
             <Link to="/add" className="hover:text-gray-200">
               Thêm mới
             </Link>
-             <Link to="/register" className="hover:text-gray-200">
-              Đăng Ký
-            </Link>
-            <Link to="/login" className="hover:text-gray-200">
-              Đăng Nhập
-            </Link>
           </div>
         </div>
       </nav>
@@ -42,8 +35,8 @@ function App() {
           <Route path="/" element={<List />} />
           <Route path="/add" element={<Add />} />
           <Route path="/edit/:id" element={<Edit />} />
-          <Route path="/register" element={<AuthPage />} />
-          <Route path="/login" element={<AuthPage isLogin={true} />} />
+          <Route path="/register" element={<Add />} />
+          <Route path="/login" element={<Edit />} />
          
         </Routes>
       </div>

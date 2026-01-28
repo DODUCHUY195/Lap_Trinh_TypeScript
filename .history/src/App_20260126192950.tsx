@@ -42,7 +42,7 @@ function App() {
           <Route path="/" element={<List />} />
           <Route path="/add" element={<Add />} />
           <Route path="/edit/:id" element={<Edit />} />
-          <Route path="/register" element={<AuthPage />} />
+          <Route path="/register" element={<AuthPage isLogin={false} />} />
           <Route path="/login" element={<AuthPage isLogin={true} />} />
          
         </Routes>

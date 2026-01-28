@@ -9,15 +9,11 @@ import toast from "react-hot-toast";
 type FormValues = {
   name: string;
   credit: number;
-  category: "Cơ sở" | "Chuyên ngành" | "Đại cương";
-  teacher: string;
 };
 
 const validate = z.object({
-  name: z.string().min(4, "Tên phải > 3 ký tự").max(100),
-  credit: z.number().min(1, "Số tín chỉ phải > 0").max(100),
-  category: z.enum(["Cơ sở", "Chuyên ngành", "Đại cương"]),
-  teacher: z.string().min(4, "Giáo viên phải > 3 ký tự").max(100),
+  name: z.string().min(3, "Name 3 ky tu").max(100),
+  credit: z.number().min(1).max(100),
 });
 
 function AddPage() {
@@ -60,6 +56,21 @@ function AddPage() {
     }
   };
 
+  const reloadList = async () => {
+    try {
+      const params = new URLSearchParams();
+      params.set("page", "1");
+      params.set("_page", "1");
+      params.set("_limit", "1000");
+      const token = localStorage.getItem("accessToken");
+      const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+      await axios.get(`/api/subject?${params.toString()}`, { headers });
+      toast.success("Đã tải lại danh sách");
+    } catch {
+      toast.error("Tải danh sách thất bại");
+    }
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-6">Thêm mới</h1>
@@ -72,7 +83,7 @@ function AddPage() {
             id="name"
             type="text"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...register("name")}
+            {...register("name", { required: "Bắt buộc", minLength: { value: 4, message: "Tên phải > 3 ký tự" } })}
           />
           {errors.name && <p className="text-red-600 mt-1">{errors.name.message}</p>}
         </div>
@@ -85,38 +96,27 @@ function AddPage() {
             id="credit"
             type="number"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...register("credit", { valueAsNumber: true })}
+            {...register("credit", {
+              valueAsNumber: true,
+              required: "Bắt buộc",
+              validate: (v) => (v > 0 ? true : "Số tín chỉ phải > 0"),
+            })}
           />
           {errors.credit && <p className="text-red-600 mt-1">{errors.credit.message}</p>}
         </div>
 
         <div>
-          <label htmlFor="category" className="block font-medium mb-1">
-            Loại môn học
+          <label htmlFor="selectOption" className="block font-medium mb-1">
+            Select - option
           </label>
           <select
-            {...register("category")}
-            id="category"
+            id="selectOption"
             className="w-full border rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="Cơ sở">Cơ sở</option>
-            <option value="Chuyên ngành">Chuyên ngành</option>
-            <option value="Đại cương">Đại cương</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
           </select>
-          {errors.category && <p className="text-red-600 mt-1">{errors.category.message}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="teacher" className="block font-medium mb-1">
-            Giáo viên
-          </label>
-          <input
-            {...register("teacher")}
-            type="text"
-            id="teacher"
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {errors.teacher && <p className="text-red-600 mt-1">{errors.teacher.message}</p>}
         </div>
 
         <button

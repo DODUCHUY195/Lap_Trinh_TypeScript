@@ -42,7 +42,7 @@ function ListSimple() {
       try {
         const token = localStorage.getItem("accessToken");
         const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-        const res = await axios.get<Subject[]>("http://localhost:3000/subject?_page=1&_limit=1000", { headers });
+        const res = await axios.get<Subject[]>("/api/subjects?_page=1&_limit=1000", { headers });
         const unique = Array.from(new Set(res.data.map((s) => s.teacher))).filter(Boolean);
         setTeachers(["Tất cả", ...unique]);
       } catch (error) {
@@ -63,13 +63,13 @@ function ListSimple() {
     const loadSubjects = async () => {
       try {
         const params = new URLSearchParams();
-        if (searchTerm.trim()) params.set("name_like", searchTerm.trim());
+        if (searchTerm.trim()) params.set("q", searchTerm.trim());
         if (teacherFilter && teacherFilter !== "Tất cả") params.set("teacher", teacherFilter);
         params.set("_page", String(currentPage));
         params.set("_limit", String(itemsPerPage));
         const token = localStorage.getItem("accessToken");
         const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-        const res = await axios.get<Subject[]>(`http://localhost:3000/subject?${params.toString()}`, { headers });
+        const res = await axios.get<Subject[]>(`/api/subjects?${params.toString()}`, { headers });
         const total = Number(res.headers["x-total-count"] ?? res.headers["X-Total-Count"] ?? "0");
         setSubjects(res.data);
         setTotalPages(Math.max(1, Math.ceil(total / itemsPerPage)));
@@ -120,14 +120,12 @@ function ListSimple() {
             const run = async () => {
               try {
                 const params = new URLSearchParams();
-                if (searchTerm.trim()) params.set("name_like", searchTerm.trim());
+                if (searchTerm.trim()) params.set("q", searchTerm.trim());
                 if (teacherFilter && teacherFilter !== "Tất cả") params.set("teacher", teacherFilter);
-                params.set("_page", String(currentPage));
-                params.set("_limit", String(itemsPerPage));
-                const token = localStorage.getItem("accessToken");
-                const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-                const res = await axios.get<Subject[]>(`/api/subject?${params.toString()}`, { headers });
-                const total = Number(res.headers["x-total-count"] ?? res.headers["X-Total-Count"] ?? "0");
+                params.set("page", String(currentPage));
+                params.set("limit", String(itemsPerPage));
+                const res = await axios.get<Subject[]>(`/api/subjects?${params.toString()}`);
+                const total = Number(res.headers["x-total-count"] || "0");
                 setSubjects(res.data);
                 setTotalPages(Math.max(1, Math.ceil(total / itemsPerPage)));
               } catch (error) {
@@ -173,7 +171,7 @@ function ListSimple() {
                         // Gọi API xóa
                         const token = localStorage.getItem("accessToken");
                         const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-                        await axios.delete(`http://localhost:3000/subject/${item.id}`, { headers });
+                        await axios.delete(`/api/subjects/${item.id}`, { headers });
                         // Xóa khỏi state để cập nhật UI
                         setSubjects((prev) => prev.filter((s) => s.id !== item.id));
                       } catch (error) {

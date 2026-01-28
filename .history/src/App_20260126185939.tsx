@@ -43,7 +43,7 @@ function App() {
           <Route path="/add" element={<Add />} />
           <Route path="/edit/:id" element={<Edit />} />
           <Route path="/register" element={<AuthPage />} />
-          <Route path="/login" element={<AuthPage isLogin={true} />} />
+          <Route path="/login" element={<AuthPage />} />
          
         </Routes>
       </div>

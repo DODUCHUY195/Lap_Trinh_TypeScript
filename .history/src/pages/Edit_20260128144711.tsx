@@ -8,15 +8,11 @@ import { useEffect } from "react";
 type FormValues = {
   name: string;
   credit: number;
-  category: "Cơ sở" | "Chuyên ngành" | "Đại cương";
-  teacher: string;
 };
 
 const validate = z.object({
-  name: z.string().min(4, "Tên phải > 3 ký tự").max(100),
-  credit: z.number().min(1, "Số tín chỉ phải > 0").max(100),
-  category: z.enum(["Cơ sở", "Chuyên ngành", "Đại cương"]),
-  teacher: z.string().min(4, "Giáo viên phải > 3 ký tự").max(100),
+  name: z.string().min(3, "Name 3 ky tu").max(10),
+  credit: z.number().min(1).max(100),
 });
 
 function EditPage() {
@@ -83,31 +79,17 @@ function EditPage() {
           <span>{errors?.credit?.message as string}</span>
         </div>
         <div>
-          <label htmlFor="category" className="block font-medium mb-1">
-            Category
+          <label htmlFor="selectOption" className="block font-medium mb-1">
+            Select - option
           </label>
           <select
-            {...register("category")}
-            id="category"
+            id="selectOption"
             className="w-full border rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="Cơ sở">Cơ sở</option>
-            <option value="Chuyên ngành">Chuyên ngành</option>
-            <option value="Đại cương">Đại cương</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
           </select>
-          <span>{errors?.category?.message as string}</span>
-        </div>
-        <div>
-          <label htmlFor="teacher" className="block font-medium mb-1">
-            Teacher
-          </label>
-          <input
-            {...register("teacher")}
-            type="text"
-            id="teacher"
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <span>{errors?.teacher?.message as string}</span>
         </div>
         <button
           type="submit"

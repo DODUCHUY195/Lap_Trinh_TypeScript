@@ -60,28 +60,6 @@
       "id": 2,
       "username": "user1",
       "password": "password1"
-    },
-    {
-      "email": "doduchuy1952000@gmail.com",
-      "password": "$2a$10$sg63gW8n9.xEUW1Xp5SmCeXifmGpJUesGbRYpDu2Dy0h8kAEeviHC",
-      "id": 3
-    },
-    {
-      "email": "doduchuy19520000@gmail.com",
-      "password": "$2a$10$Z/teEi/NIwmjAkmObvV5K.i/tk5NLEkfEzlruYgUUlOJKN.lUYgEG",
-      "id": 4
-    },
-    {
-      "email": "doduchuy1952000v@gmail.com",
-      "password": "$2a$10$d.PmJJmDrszUE7d05wDRg.qlFvDMETeqzb1FHEMQ3mHfoluxeRRum",
-      "username": "abccc",
-      "id": 5
-    },
-    {
-      "email": "doduchuy195200099@gmail.com",
-      "password": "$2a$10$2GNTl.MDjMUn5wIaQXjY4OCoDJMIVh41cpefq22LDsoYdU6igfjoW",
-      "username": "assss",
-      "id": 6
     }
   ]
 }

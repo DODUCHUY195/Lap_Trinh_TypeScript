@@ -42,8 +42,8 @@ function App() {
           <Route path="/" element={<List />} />
           <Route path="/add" element={<Add />} />
           <Route path="/edit/:id" element={<Edit />} />
-          <Route path="/register" element={<AuthPage />} />
-          <Route path="/login" element={<AuthPage isLogin={true} />} />
+          <Route path="/register" element={<AuthPage isRegister />} />
+          <Route path="/login" element={<AuthPage />} />
          
         </Routes>
       </div>

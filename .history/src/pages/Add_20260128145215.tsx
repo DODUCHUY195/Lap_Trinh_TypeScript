@@ -72,7 +72,7 @@ function AddPage() {
             id="name"
             type="text"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...register("name")}
+            {...register("name", { required: "Bắt buộc", minLength: { value: 4, message: "Tên phải > 3 ký tự" } })}
           />
           {errors.name && <p className="text-red-600 mt-1">{errors.name.message}</p>}
         </div>
@@ -85,7 +85,11 @@ function AddPage() {
             id="credit"
             type="number"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...register("credit", { valueAsNumber: true })}
+            {...register("credit", {
+              valueAsNumber: true,
+              required: "Bắt buộc",
+              validate: (v) => (v > 0 ? true : "Số tín chỉ phải > 0"),
+            })}
           />
           {errors.credit && <p className="text-red-600 mt-1">{errors.credit.message}</p>}
         </div>

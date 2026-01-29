@@ -6,6 +6,12 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 
+// Trang Auth: Đăng nhập/Đăng ký
+// Dùng zod để validate schema theo chế độ:
+// - Login: email + password
+// - Register: username + email + password + confirmPassword (phải khớp password)
+// Sau khi đăng nhập thành công → lưu accessToken vào localStorage
+
 type Props = {
   isLogin?: boolean;
 };
@@ -19,6 +25,7 @@ type FormValues = {
 
 function AuthPage({ isLogin }: Props) {
   const nav = useNavigate();
+  // Khởi tạo form; resolver chọn theo isLogin để áp dụng đúng schema
   const {
     register,
     handleSubmit,
@@ -32,7 +39,8 @@ function AuthPage({ isLogin }: Props) {
                 email: z.string().email("Email không hợp lệ"),
                 password: z.string().min(7, "Phải > 6 ký tự"),
               })
-            : z.object({
+            : z
+                .object({
                   username: z.string().min(5, "Phải > 4 ký tự"),
                   email: z.string().email("Email không hợp lệ"),
                   password: z.string().min(7, "Phải > 6 ký tự"),
@@ -49,17 +57,16 @@ function AuthPage({ isLogin }: Props) {
   const onSubmit = async (values: FormValues) => {
     try {
       if (isLogin) {
+        // Đăng nhập: gửi email/password; nhận accessToken
         const { data } = await axios.post("http://localhost:3000/login", {
           email: values.email,
           password: values.password,
         });
         localStorage.setItem("accessToken", data.accessToken);
-        if (data.user) {
-          localStorage.setItem("user", JSON.stringify(data.user));
-        }
         toast.success("Đăng nhập thành công");
         nav("/");
       } else {
+        // Đăng ký: gửi username/email/password
         await axios.post("http://localhost:3000/register", {
           username: values.username,
           email: values.email,
@@ -75,6 +82,7 @@ function AuthPage({ isLogin }: Props) {
   return (
     <div className="">
       <h1 className="text-3xl">{isLogin ? "Login" : "Register"}</h1>
+      {/* Form nhập liệu; mỗi field hiển thị lỗi từ zod qua formState.errors */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {!isLogin && (
           <div>

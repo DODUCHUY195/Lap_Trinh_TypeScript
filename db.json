@@ -1,11 +1,11 @@
 {
   "subject": [
     {
-      "id": 3,
-      "name": "Cấu trúc dữ liệuu",
-      "credit": 3,
+      "name": "Cấu trúc dữ liệuuuu1",
+      "credit": 4,
       "category": "Cơ sở",
-      "teacher": "Lê Văn C"
+      "teacher": "Lê Văn Cc",
+      "id": 3
     },
     {
       "id": 4,
@@ -29,13 +29,6 @@
       "teacher": "Phạm Văn Donggg"
     },
     {
-      "id": 8,
-      "name": "ReactJS Cơ Bản",
-      "credit": 3,
-      "category": "Chuyên ngành",
-      "teacher": "Nguyễn Văn A"
-    },
-    {
       "id": 9,
       "name": "ReactJS Nâng Caoo",
       "credit": 4,
@@ -48,6 +41,13 @@
       "credit": 5,
       "category": "Chuyên ngành",
       "teacher": "Nguyễn Văn Aaa"
+    },
+    {
+      "name": "abcc",
+      "credit": 1,
+      "category": "Chuyên ngành",
+      "teacher": "xyzz",
+      "id": 11
     }
   ],
   "users": [
@@ -82,6 +82,18 @@
       "password": "$2a$10$2GNTl.MDjMUn5wIaQXjY4OCoDJMIVh41cpefq22LDsoYdU6igfjoW",
       "username": "assss",
       "id": 6
+    },
+    {
+      "email": "trangdtq23@gmail.com",
+      "password": "$2a$10$gz4luBmlpBWCAX2LbHuoAudJRuRWPEOm.ExIi7IMoFz7HW0TIks2W",
+      "username": "admin",
+      "id": 7
+    },
+    {
+      "email": "trangdtq233@gmail.com",
+      "password": "$2a$10$SsyzUE44ljAvSM5df.Mw/uD2eLPnfe.5oqbxx75vmeX6Od.0O2VjG",
+      "username": "1234av",
+      "id": 8
     }
   ]
 }

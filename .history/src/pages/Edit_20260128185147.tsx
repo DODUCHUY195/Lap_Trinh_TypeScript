@@ -2,8 +2,12 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+
+// Trang Edit: Cập nhật môn học theo id trên URL
+// Dùng react-hook-form + zod để validate tập trung
+// Luồng: tải chi tiết → reset form → người dùng sửa → submit PUT
 
 type FormValues = {
   name: string;
@@ -12,6 +16,11 @@ type FormValues = {
   teacher: string;
 };
 
+// Schema zod cho form Edit
+// - name: chuỗi, > 3 ký tự
+// - credit: số, > 0
+// - category: một trong 3 giá trị hợp lệ
+// - teacher: chuỗi, > 3 ký tự
 const validate = z.object({
   name: z.string().min(4, "Tên phải > 3 ký tự").max(100),
   credit: z.number().min(1, "Số tín chỉ phải > 0").max(100),
@@ -21,7 +30,7 @@ const validate = z.object({
 
 function EditPage() {
   const { id } = useParams();
-  const nav = useNavigate();
+  // Khởi tạo form với zodResolver để lấy lỗi từ schema
   const {
     register,
     handleSubmit,
@@ -31,6 +40,7 @@ function EditPage() {
     resolver: zodResolver(validate),
   });
 
+  // Tải chi tiết môn học theo id và điền vào form
   useEffect(() => {
     const getDetail = async () => {
       try {
@@ -45,12 +55,12 @@ function EditPage() {
     if (id) getDetail();
   }, [id, reset]);
 
+  // Submit PUT cập nhật dữ liệu theo id
   const onSubmit = async (values: FormValues) => {
     try {
       const token = localStorage.getItem("accessToken");
       const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-      await axios.put(`http://localhost:3000/subject/${id}`, values, { headers });
-      nav("/");
+      await axios.put(`/api/subject/${id}`, values, { headers });
     } catch (error) {
       console.log(error);
     }
@@ -59,7 +69,9 @@ function EditPage() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-6">Update</h1>
+      {/* Form: name, credit, category, teacher; hiển thị lỗi từ errors */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* name */}
         <div>
           <label htmlFor="text" className="block font-medium mb-1">
             Text
@@ -72,6 +84,7 @@ function EditPage() {
           />
           <span>{errors?.name?.message as string}</span>
         </div>
+        {/* credit */}
         <div>
           <label htmlFor="credit" className="block font-medium mb-1">
             Credit
@@ -84,6 +97,7 @@ function EditPage() {
           />
           <span>{errors?.credit?.message as string}</span>
         </div>
+        {/* category */}
         <div>
           <label htmlFor="category" className="block font-medium mb-1">
             Category
@@ -99,6 +113,7 @@ function EditPage() {
           </select>
           <span>{errors?.category?.message as string}</span>
         </div>
+        {/* teacher */}
         <div>
           <label htmlFor="teacher" className="block font-medium mb-1">
             Teacher

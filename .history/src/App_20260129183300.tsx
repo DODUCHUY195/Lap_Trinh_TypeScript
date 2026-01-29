@@ -15,15 +15,17 @@ type AuthUser = {
 
 function App() {
   const nav = useNavigate();
+  // Trạng thái đăng nhập: true nếu có accessToken trong localStorage
   const [isAuthed, setIsAuthed] = useState<boolean>(Boolean(localStorage.getItem("accessToken")));
   const [user, setUser] = useState<AuthUser>(() => {
+  const [user, setUser] = useState<any>(() => {
     try {
-       const raw = localStorage.getItem("user");
       return raw ? (JSON.parse(raw) as { username?: string; email?: string }) : null;
+      return raw ? JSON.parse(raw) : null;
     } catch {
       return null;
     }
-});
+  // Cập nhật mỗi khi thay đổi đường dẫn (sau login/logout điều hướng)
   const location = useLocation();
   useEffect(() => {
     setIsAuthed(Boolean(localStorage.getItem("accessToken")));
@@ -48,6 +50,8 @@ function App() {
     
   return (
     <>
+      {/* NAVBAR */}
+     
       <nav className="bg-blue-600 text-white shadow">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="text-xl font-semibold">
@@ -83,9 +87,13 @@ function App() {
 
       <div className="max-w-6xl mx-auto mt-10 px-4">
         <Routes>
+          
+
+          {/* Trang danh sách luôn truy cập được */}
           <Route element={<LayoutAdmin />}>
             <Route path="/" element={<List />} />
           </Route>
+          {/* Nhóm route yêu cầu đăng nhập */}
           <Route element={isAuthed ? <LayoutAdmin /> : <Navigate to="/login" replace />}>
             <Route path="/add" element={<Add />} />
             <Route path="/edit/:id" element={<Edit />} />
